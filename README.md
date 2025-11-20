@@ -77,18 +77,30 @@ A decentralized ticketing platform built on blockchain technology that enables e
 
 ### Automated Setup (Recommended)
 ```bash
-# Clone repository with submodules
-git clone --recurse-submodules <repository-url>
-cd CryptoTicketing
+# 1. Clone repository with submodules
+git clone --recurse-submodules https://github.com/annddrrea/CryptoTicketing2.git
+cd CryptoTicketing2
 
-# Install all dependencies (Node.js, Foundry, npm packages)
+# 2. Create .env file (REQUIRED - not included in repo for security)
+cp .env.example .env
+# The .env file contains the private key for local development
+# Default uses Anvil's first test account (safe for local dev only)
+
+# 3. Install all dependencies (Node.js, Foundry, npm packages)
 chmod +x setup.sh
 ./setup.sh
 
-# Start complete development environment
+# 4. Start complete development environment
 chmod +x start-dev.sh
 ./start-dev.sh
 ```
+
+**⚠️ IMPORTANT:** The `.env` file is gitignored and MUST be created manually. Without it, you'll get the error:
+```
+vm.envUint: environment variable "PRIVATE_KEY" not found
+```
+
+The `.env.example` file contains safe defaults for local development.
 
 The `start-dev.sh` script automatically:
 1. Starts Anvil local blockchain (port 8545)
@@ -362,6 +374,51 @@ app.get('/api/marketplace', async (req, res) => {
 
 ### Frontend Customization
 Modify `frontend/src/App.tsx` for UI changes or add new components.
+
+## Troubleshooting
+
+### "PRIVATE_KEY not found" Error
+**Problem:** When running `./start-dev.sh`, you see:
+```
+vm.envUint: environment variable "PRIVATE_KEY" not found
+```
+
+**Solution:** You need to create a `.env` file in the project root:
+```bash
+cp .env.example .env
+```
+
+The `.env` file is intentionally gitignored for security. It contains:
+```env
+PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+```
+
+This is Anvil's first test account private key (safe for local development only, NEVER use in production).
+
+### Port Already in Use
+If you see "port already in use" errors:
+```bash
+./stop-dev.sh  # Stop all running services
+./start-dev.sh  # Restart
+```
+
+### Submodules Not Loaded
+If `lib/forge-std` or `lib/openzeppelin-contracts` are empty:
+```bash
+git submodule update --init --recursive
+forge install
+```
+
+### MetaMask Connection Issues
+1. Ensure MetaMask is connected to `localhost:8545`
+2. Chain ID should be `31337`
+3. Import Anvil test account if needed (private key from `.env`)
+
+### Contract Address Not Found
+If the backend can't find the contract address:
+1. Ensure Anvil is running: `ps aux | grep anvil`
+2. Check deployment was successful: `cat broadcast/Deploy.s.sol/31337/run-latest.json`
+3. Restart services: `./stop-dev.sh && ./start-dev.sh`
 
 ## Key Features
 
