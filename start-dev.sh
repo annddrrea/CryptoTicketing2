@@ -49,7 +49,7 @@ sleep 3
 
 echo "4. Deploying smart contracts..."
 sleep 3  # Wait for anvil to start
-forge script scripts/Deploy.s.sol --rpc-url http://localhost:8545 --broadcast --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+forge script scripts/Deploy.s.sol --rpc-url http://localhost:8545 --broadcast
 
 echo "5. Configuring event sales..."
 sleep 2  # Wait for deployment to complete
@@ -65,7 +65,7 @@ if [ -f "broadcast/Deploy.s.sol/31337/run-latest.json" ]; then
     
     if [ -n "$CONTRACT_ADDRESS" ]; then
         echo "   Using detected contract address: $CONTRACT_ADDRESS"
-        TICKET_CONTRACT_ADDRESS=$CONTRACT_ADDRESS forge script scripts/SetupEvents.s.sol --rpc-url http://localhost:8545 --broadcast --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+        TICKET_CONTRACT_ADDRESS=$CONTRACT_ADDRESS forge script scripts/SetupEvents.s.sol --rpc-url http://localhost:8545 --broadcast
     else
         echo "   ⚠️  Could not detect contract address, skipping event setup"
     fi
