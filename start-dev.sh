@@ -3,6 +3,11 @@
 echo "🚀 Starting CryptoTicketing Development Environment"
 echo "=================================================="
 
+# Load environment variables
+if [ -f .env ]; then
+    export $(cat .env | grep -v '^#' | xargs)
+fi
+
 # Check if all dependencies are installed
 if ! command -v node &> /dev/null; then
     echo "❌ Node.js not found. Please run ./setup.sh first"
